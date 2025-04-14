@@ -5,14 +5,9 @@ import { useEffect, useRef } from "react";
 interface QuillEditorProps {
   value: string;
   onChange: (value: string) => void;
-  modules?: any;
 }
 
-const QuillEditor: React.FC<QuillEditorProps> = ({
-  value,
-  onChange,
-  modules,
-}) => {
+const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
   const quillRef = useRef<HTMLDivElement | null>(null);
   const editorRef = useRef<any>(null);
 
@@ -23,8 +18,10 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
         const img = new Image();
         img.onload = () => {
           const canvas = document.createElement("canvas");
-          const MAX_WIDTH = 800;
-          const MAX_HEIGHT = 600;
+
+          // Max dimensions based on desired resolution
+          const MAX_WIDTH = 1600;
+          const MAX_HEIGHT = 1200;
           let width = img.width;
           let height = img.height;
 
@@ -45,8 +42,17 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
           const ctx = canvas.getContext("2d");
           ctx?.drawImage(img, 0, 0, width, height);
 
-          // Convert to base64 with reduced quality
-          const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
+          // Use WebP format for near-lossless compression
+          let compressedBase64 = canvas.toDataURL("image/webp", 1); // '1' for near-lossless quality
+
+          // Alternatively, use PNG format for truly lossless compression
+          // let compressedBase64 = canvas.toDataURL("image/png");
+
+          // Dynamically adjust quality to keep the image under 1MB
+          while (compressedBase64.length > 1_000_000) {
+            compressedBase64 = canvas.toDataURL("image/webp", 0.9); // Reduce quality slightly
+          }
+
           resolve(compressedBase64);
         };
         img.src = e.target?.result as string;
@@ -101,7 +107,6 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
               image: imageHandler,
             },
           },
-          ...modules,
         },
       });
 

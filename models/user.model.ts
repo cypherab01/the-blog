@@ -7,6 +7,7 @@ const userSchema = new Schema(
     email: { type: String, unique: true, required: true },
     image: String,
     role: { type: String, enum: ["user", "admin"], default: "user" },
+    savedBlogs: [{ type: Schema.Types.ObjectId, ref: "Blog" }],
   },
   {
     timestamps: true,

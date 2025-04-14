@@ -1,7 +1,20 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
-import dbConnect from "@/lib/dbConnect";
+import dbConnect from "@/lib/db/dbConnect";
 import User from "@/models/user.model";
+
+/*
+explanation of the code:
+
+1. we signin
+2. check data if exists if not create it
+3. goes to jwt callback
+4. we fetch the user from the database and add it to the token
+5. we return the token because token is used to create the session
+6. we go to the session callback and add the user information to the session
+7. we return the session
+
+*/
 
 declare module "next-auth" {
   interface Session {
@@ -19,7 +32,7 @@ declare module "next-auth" {
     name?: string | null | undefined;
     email?: string | null | undefined;
     image?: string | null | undefined;
-    role?: string | null | undefined;
+    role: string;
   }
 }
 
@@ -46,7 +59,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             name: user.name,
             email: user.email,
             image: user.image,
-            role: "user",
           });
         }
         return true;

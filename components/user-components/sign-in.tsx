@@ -1,12 +1,11 @@
-import { signIn } from "@/auth";
+import { signIn } from "@/lib/auth/auth";
 
 export default function SignIn() {
   return (
     <form
       action={async () => {
         "use server";
-        const { response } = await signIn("google");
-        console.log("response", response);
+        await signIn("google");
       }}
     >
       <button type="submit">Signin with Google</button>

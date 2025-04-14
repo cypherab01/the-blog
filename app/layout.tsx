@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
-import connectToDatabase from "@/lib/dbConnect";
+import { ThemeProvider } from "@/components/theme-provider";
+
 const inter = Inter({
   subsets: ["latin"],
 });
@@ -19,8 +20,17 @@ export default function RootLayout({
 }>) {
   return (
     <SessionProvider>
-      <html lang="en">
-        <body className={`${inter.className} antialiased`}>{children}</body>
+      <html lang="en" suppressHydrationWarning>
+        <body className={`${inter.className} antialiased`}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <div className="container mx-auto p-4 md:p-8">{children}</div>
+          </ThemeProvider>
+        </body>
       </html>
     </SessionProvider>
   );

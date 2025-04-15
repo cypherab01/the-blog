@@ -1,0 +1,135 @@
+"use client";
+
+import * as React from "react";
+import { Check, ChevronsUpDown, X } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { blogTags } from "@/constants/blog-tags";
+import { Badge } from "./ui/badge";
+
+export function BlogTagsPicker() {
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState<string[]>([]);
+  const [isCollapsed, setIsCollapsed] = React.useState(false);
+
+  const selectedTags = blogTags.filter((tag) => value.includes(tag.value));
+
+  const handleRemoveTag = (tagValue: string) => {
+    setValue((prev) => prev.filter((item) => item !== tagValue));
+  };
+
+  return (
+    <div className="w-full">
+      {selectedTags.length > 0 && !isCollapsed && (
+        <div className="flex flex-wrap gap-2 mb-2">
+          {selectedTags.map((tag) => (
+            <Badge
+              key={tag.value}
+              variant="secondary"
+              className="flex items-center gap-1 group"
+            >
+              {tag.label}
+              <button
+                type="button"
+                className="h-3 w-3 cursor-pointer opacity-50 group-hover:opacity-100 transition-opacity"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleRemoveTag(tag.value);
+                }}
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </Badge>
+          ))}
+          {selectedTags.length > 3 && (
+            <Badge
+              variant="outline"
+              className="cursor-pointer hover:bg-secondary/80"
+              onClick={() => setIsCollapsed(true)}
+            >
+              Show Less
+            </Badge>
+          )}
+        </div>
+      )}
+      {selectedTags.length > 0 && isCollapsed && (
+        <div className="flex items-center gap-2 mb-2">
+          <Badge variant="secondary">
+            {selectedTags.length} topics selected
+          </Badge>
+          <Badge
+            variant="outline"
+            className="cursor-pointer hover:bg-secondary/80"
+            onClick={() => setIsCollapsed(false)}
+          >
+            Show All
+          </Badge>
+        </div>
+      )}
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className="w-full justify-between"
+          >
+            {value.length > 0
+              ? "Select More Topics..."
+              : "Select Related Topics..."}
+            <ChevronsUpDown className="opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent
+          className="w-[var(--radix-popover-trigger-width)] p-0"
+          align="start"
+        >
+          <Command className="w-full">
+            <CommandInput placeholder="Search blogTags..." className="h-9" />
+            <CommandList>
+              <CommandEmpty>No related topics found.</CommandEmpty>
+              <CommandGroup>
+                {blogTags.map((tag) => (
+                  <CommandItem
+                    key={tag.value}
+                    value={tag.value}
+                    onSelect={(currentValue) => {
+                      setValue((prev) =>
+                        prev.includes(currentValue)
+                          ? prev.filter((item) => item !== currentValue)
+                          : [...prev, currentValue]
+                      );
+                    }}
+                  >
+                    {tag.label}
+                    <Check
+                      className={cn(
+                        "ml-auto h-4 w-4",
+                        value.includes(tag.value) ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}

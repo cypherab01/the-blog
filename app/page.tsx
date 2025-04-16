@@ -1,15 +1,21 @@
-import SignIn from "@/components/user-components/sign-in";
-import { ModeToggle } from "@/components/ui/mode-toggle";
 import Link from "next/link";
+import { ModeToggle } from "@/components/ui/mode-toggle";
+import ActionButtons from "@/components/user-components/ActionButtons";
 
 const Home = () => {
   return (
     <>
-      <div className="">
-        <SignIn />
-        <Link href="/login">Login</Link>
-        <ModeToggle />
-      </div>
+      <header>
+        <div className="flex items-center justify-between">
+          <Link href="/">
+            <h1 className="text-2xl font-bold tracking-tight">The Blog</h1>
+          </Link>
+          <div className="flex items-center gap-4">
+            <ActionButtons />
+            <ModeToggle />
+          </div>
+        </div>
+      </header>
     </>
   );
 };

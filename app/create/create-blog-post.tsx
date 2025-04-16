@@ -14,6 +14,8 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import RequiredStar from "@/components/user-components/RequiredStar";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+
 const CreateBlogPost = () => {
   const router = useRouter();
 
@@ -71,6 +73,13 @@ const CreateBlogPost = () => {
   return (
     <section className="max-w-6xl mx-auto">
       <h1 className="mb-4 text-2xl font-bold tracking-tight">Post Blog</h1>
+      <p className="mb-4 text-muted-foreground">
+        <Link href="/" className="hover:underline-offset-4 hover:underline">
+          Home
+        </Link>{" "}
+        &gt;{" "}
+        <span className="font-medium text-muted-foreground">Create Post</span>
+      </p>
 
       <div className="form-container">
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -96,12 +105,16 @@ const CreateBlogPost = () => {
               <RequiredStar />
             </Label>
             <UploadDropzone
-              config={{ mode: "auto" }}
+              className=""
+              config={{
+                appendOnPaste: true,
+                mode: "auto",
+              }}
               endpoint="imageUploader"
               onClientUploadComplete={(res) => {
                 setImage(res[0].ufsUrl);
                 toast.success("Image uploaded successfully");
-                console.log("Files: ", res);
+                // console.log("Files: ", res);
                 setImageUploading(false);
               }}
               onUploadError={(error: Error) => {
@@ -109,12 +122,12 @@ const CreateBlogPost = () => {
                 setImageUploading(false);
               }}
               onUploadBegin={(name) => {
-                // toast.info("Uploading image...");
+                toast.info("Uploading image...");
                 setImageUploading(true);
               }}
               onUploadProgress={(progress) => {
-                console.log("Progress: ", progress);
-                toast.info(`Uploading image... ${progress}%`);
+                // console.log("Progress: ", progress);
+                // toast.info(`Uploading image... ${progress}%`);
               }}
             />
             <input type="hidden" name="image" value={image || ""} />
@@ -127,14 +140,15 @@ const CreateBlogPost = () => {
                   Preview
                 </Label>
                 <p className="text-sm text-muted-foreground">
-                  The image quality is slightly compressed.
+                  The image quality is slightly compressed and it could have
+                  preview issues.
                 </p>
               </div>
               <div className="relative rounded-md image-container">
                 <div>
                   <Image
                     src={image}
-                    alt="Uploaded Image"
+                    alt={`${" "}image-uploaded-successfully`}
                     width={200}
                     height={50}
                     className="object-cover w-full h-full"

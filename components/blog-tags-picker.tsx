@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Check, ChevronsUpDown, X } from "lucide-react";
 
@@ -21,15 +19,21 @@ import {
 import { blogTags } from "@/constants/blog-tags";
 import { Badge } from "./ui/badge";
 
-export function BlogTagsPicker() {
+interface BlogTagsPickerProps {
+  selectedTags: string[];
+  onTagSelection: (tags: string[]) => void;
+}
+
+export function BlogTagsPicker({
+  selectedTags,
+  onTagSelection,
+}: BlogTagsPickerProps) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState<string[]>([]);
   const [isCollapsed, setIsCollapsed] = React.useState(false);
 
-  const selectedTags = blogTags.filter((tag) => value.includes(tag.value));
-
   const handleRemoveTag = (tagValue: string) => {
-    setValue((prev) => prev.filter((item) => item !== tagValue));
+    const newTags = selectedTags.filter((item) => item !== tagValue);
+    onTagSelection(newTags); // Call parent callback
   };
 
   return (
@@ -38,18 +42,18 @@ export function BlogTagsPicker() {
         <div className="flex flex-wrap gap-2 mb-2">
           {selectedTags.map((tag) => (
             <Badge
-              key={tag.value}
+              key={tag}
               variant="secondary"
               className="flex items-center gap-1 group"
             >
-              {tag.label}
+              {tag}
               <button
                 type="button"
                 className="h-3 w-3 cursor-pointer opacity-50 group-hover:opacity-100 transition-opacity"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  handleRemoveTag(tag.value);
+                  handleRemoveTag(tag);
                 }}
               >
                 <X className="h-3 w-3" />
@@ -89,7 +93,7 @@ export function BlogTagsPicker() {
             aria-expanded={open}
             className="w-full justify-between"
           >
-            {value.length > 0
+            {selectedTags.length > 0
               ? "Select More Topics..."
               : "Select Related Topics..."}
             <ChevronsUpDown className="opacity-50" />
@@ -109,18 +113,19 @@ export function BlogTagsPicker() {
                     key={tag.value}
                     value={tag.value}
                     onSelect={(currentValue) => {
-                      setValue((prev) =>
-                        prev.includes(currentValue)
-                          ? prev.filter((item) => item !== currentValue)
-                          : [...prev, currentValue]
-                      );
+                      const newTags = selectedTags.includes(currentValue)
+                        ? selectedTags.filter((item) => item !== currentValue)
+                        : [...selectedTags, currentValue];
+                      onTagSelection(newTags); // Call parent callback
                     }}
                   >
                     {tag.label}
                     <Check
                       className={cn(
                         "ml-auto h-4 w-4",
-                        value.includes(tag.value) ? "opacity-100" : "opacity-0"
+                        selectedTags.includes(tag.value)
+                          ? "opacity-100"
+                          : "opacity-0"
                       )}
                     />
                   </CommandItem>

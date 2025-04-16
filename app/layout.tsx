@@ -37,7 +37,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className="container p-4 mx-auto md:p-8">
+            <div className="container max-w-4xl p-4 mx-auto md:p-8">
               <Header />
               {children}
             </div>

@@ -49,14 +49,14 @@ export function BlogTagsPicker({
               {tag}
               <button
                 type="button"
-                className="h-3 w-3 cursor-pointer opacity-50 group-hover:opacity-100 transition-opacity"
+                className="w-3 h-3 transition-opacity opacity-50 cursor-pointer group-hover:opacity-100"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
                   handleRemoveTag(tag);
                 }}
               >
-                <X className="h-3 w-3" />
+                <X className="w-3 h-3" />
               </button>
             </Badge>
           ))}
@@ -91,10 +91,10 @@ export function BlogTagsPicker({
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-full justify-between"
+            className="justify-between w-full px-2 py-6 cursor-pointer"
           >
             {selectedTags.length > 0
-              ? "Select More Topics..."
+              ? "Select all topics that apply..."
               : "Select Related Topics..."}
             <ChevronsUpDown className="opacity-50" />
           </Button>
@@ -104,12 +104,13 @@ export function BlogTagsPicker({
           align="start"
         >
           <Command className="w-full">
-            <CommandInput placeholder="Search blogTags..." className="h-9" />
+            <CommandInput placeholder="Search blogTags..." className="h-10" />
             <CommandList>
               <CommandEmpty>No related topics found.</CommandEmpty>
               <CommandGroup>
                 {blogTags.map((tag) => (
                   <CommandItem
+                    className="py-4"
                     key={tag.value}
                     value={tag.value}
                     onSelect={(currentValue) => {
@@ -122,7 +123,7 @@ export function BlogTagsPicker({
                     {tag.label}
                     <Check
                       className={cn(
-                        "ml-auto h-4 w-4",
+                        " h-4 w-4",
                         selectedTags.includes(tag.value)
                           ? "opacity-100"
                           : "opacity-0"

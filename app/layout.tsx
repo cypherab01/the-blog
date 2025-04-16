@@ -9,6 +9,7 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 
 import { ourFileRouter } from "@/app/api/uploadthing/core";
+import Header from "@/components/user-components/Header";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -36,7 +37,10 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className="container mx-auto p-4 md:p-8">{children}</div>
+            <div className="container p-4 mx-auto md:p-8">
+              <Header />
+              {children}
+            </div>
           </ThemeProvider>
           <Toaster richColors position="top-center" />
         </body>

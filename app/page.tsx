@@ -1,21 +1,10 @@
-import Link from "next/link";
-import { ModeToggle } from "@/components/ui/mode-toggle";
-import ActionButtons from "@/components/user-components/ActionButtons";
+import BlogCard from "@/components/user-components/BlogCard";
 
 const Home = () => {
   return (
     <>
-      <header>
-        <div className="flex items-center justify-between">
-          <Link href="/">
-            <h1 className="text-2xl font-bold tracking-tight">The Blog</h1>
-          </Link>
-          <div className="flex items-center gap-4">
-            <ActionButtons />
-            <ModeToggle />
-          </div>
-        </div>
-      </header>
+      <h2 className="my-8 text-xl font-bold tracking-tight">Latest Blogs</h2>
+      <BlogCard />
     </>
   );
 };

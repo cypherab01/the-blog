@@ -4,7 +4,6 @@ import axios from "axios";
 
 interface PageProps {
   searchParams: Promise<{ page?: string }>;
-  searchParams: Promise<{ page?: string }>;
 }
 
 const getBlogs = async (page: number) => {

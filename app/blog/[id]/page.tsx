@@ -8,9 +8,9 @@ import Image from "next/image";
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const { id } = params;
+  const { id } = await params;
 
   try {
     await connectToDatabase();
@@ -33,7 +33,11 @@ export async function generateMetadata({
 }
 
 // Page component to render blog post details
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
 
   try {

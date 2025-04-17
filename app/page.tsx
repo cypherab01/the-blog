@@ -4,11 +4,11 @@ import axios from "axios";
 
 interface PageProps {
   searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ page?: string }>;
 }
 
 const getBlogs = async (page: number) => {
   try {
-    // Use absolute URL for server component
     const response = await axios.get(
       `${
         process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"

@@ -2,17 +2,25 @@ import connectToDatabase from "@/lib/db/dbConnect";
 import Blog from "@/models/blog.model";
 import { NextRequest, NextResponse } from "next/server";
 
-// get request to get all blog posts with limit and page
+// Get request to get all blog posts with limit and page
 export async function GET(request: NextRequest) {
   await connectToDatabase();
-  // get limit and page from url params
+  // Get limit and page from URL params
   const { searchParams } = new URL(request.url);
   const limit = parseInt(searchParams.get("limit") || "10");
   const page = parseInt(searchParams.get("page") || "1");
 
+  // Get the total count of posts to calculate total pages
+  const totalPosts = await Blog.countDocuments();
+
+  // Calculate the total number of pages
+  const totalPages = Math.ceil(totalPosts / limit);
+
+  // Get posts for the current page
   const posts = await Blog.find()
     .limit(limit)
     .skip((page - 1) * limit)
+    .sort({ createdAt: -1 })
     .select("-__v");
 
   if (posts.length === 0) {
@@ -39,5 +47,13 @@ export async function GET(request: NextRequest) {
     };
   });
 
-  return NextResponse.json(processedPosts, { status: 200 });
+  return NextResponse.json(
+    {
+      posts: processedPosts,
+      currentPage: page,
+      totalPages: totalPages,
+      totalPosts: totalPosts,
+    },
+    { status: 200 }
+  );
 }

@@ -3,7 +3,7 @@ import { PaginationBar } from "@/components/user-components/PaginationBar";
 import axios from "axios";
 
 interface PageProps {
-  searchParams: { page?: string };
+  searchParams: Promise<{ page?: string }>;
 }
 
 const getBlogs = async (page: number) => {
@@ -28,7 +28,8 @@ const getBlogs = async (page: number) => {
   }
 };
 
-const Home = async ({ searchParams }: PageProps) => {
+const Home = async (props: PageProps) => {
+  const searchParams = await props.searchParams;
   const page = searchParams.page ? parseInt(searchParams.page) : 1;
   const { posts, currentPage, totalPages, totalPosts } = await getBlogs(page);
 

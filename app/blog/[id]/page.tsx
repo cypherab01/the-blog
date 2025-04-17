@@ -3,6 +3,9 @@ import connectToDatabase from "@/lib/db/dbConnect";
 import Blog from "@/models/blog.model";
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import "./styles.css";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getAuthorInfo } from "@/actions/getAuthorName";
 
 // This is for generating metadata dynamically based on params
 export async function generateMetadata({
@@ -48,16 +51,25 @@ export default async function Page({
       notFound();
     }
 
+    const { name, image } = await getAuthorInfo({ id: blog.author });
+
     return (
-      <div className="max-w-4xl mx-auto p-4">
-        <h1 className="text-3xl font-bold mb-4">{blog.title}</h1>
+      <div className="max-w-4xl mx-auto p-4 blog-container">
+        <h1 className="font-bold mb-4 tracking-tight">{blog.title}</h1>
+        <p className="text-sm text-muted-foreground w-full flex items-center gap-2">
+          <Avatar>
+            <AvatarImage src={image} />
+            <AvatarFallback>{name.charAt(0)}</AvatarFallback>
+          </Avatar>
+          {name}
+        </p>
 
         {blog.image && (
           <div className="mb-6">
             <Image
               src={blog.image}
               alt={blog.title}
-              className="w-full h-auto rounded-md"
+              className="w-full h-auto rounded-md aspect-video"
               width={1000}
               height={1000}
             />

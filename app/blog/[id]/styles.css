@@ -1,0 +1,27 @@
+
+.blog-container *:not(:last-child) {
+    padding-bottom: 1rem;
+   
+}
+
+.blog-container * {
+font-size: 1.2rem;
+}
+
+.blog-container h1 {
+    font-size: 3rem;
+}
+
+ol {
+    list-style-type: decimal;
+    list-style-position: inside;
+}
+
+ul {
+    list-style-type: disc;
+    list-style-position: inside;
+}
+
+li {
+    padding-bottom: 1rem;
+}

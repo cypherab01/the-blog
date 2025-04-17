@@ -1,37 +1,50 @@
 import BlogCard from "@/components/user-components/BlogCard";
+import { PaginationBar } from "@/components/user-components/PaginationBar";
 import axios from "axios";
-import { toast } from "sonner";
 
-const getBlogs = async () => {
+interface PageProps {
+  searchParams: { page?: string };
+}
+
+const getBlogs = async (page: number) => {
   try {
     // Use absolute URL for server component
     const response = await axios.get(
       `${
         process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
-      }/api/blog?limit=10&page=1`
+      }/api/blog?limit=10&page=${page}`
     );
-    const blogs = response.data;
-    return blogs;
+    return response.data;
   } catch (error: any) {
-    if (error.response.status === 404) {
-      return [];
+    if (error.response?.status === 404) {
+      return { posts: [], currentPage: 1, totalPages: 0, totalPosts: 0 };
     }
-    if (error.response.status === 500) {
-      toast.error(error.response.data.message);
-      return [];
+    if (error.response?.status === 500) {
+      console.error("Server error:", error.response.data.message);
+      return { posts: [], currentPage: 1, totalPages: 0, totalPosts: 0 };
     }
-    toast.error("Failed to fetch blogs");
-    return [];
+    console.error("Failed to fetch blogs:", error);
+    return { posts: [], currentPage: 1, totalPages: 0, totalPosts: 0 };
   }
 };
 
-const Home = async () => {
-  const blogs = await getBlogs();
+const Home = async ({ searchParams }: PageProps) => {
+  const page = searchParams.page ? parseInt(searchParams.page) : 1;
+  const { posts, currentPage, totalPages, totalPosts } = await getBlogs(page);
+
   return (
     <main>
       <h2 className="my-8 text-xl font-bold tracking-tight">Latest Blogs</h2>
-      <BlogCard blogs={blogs} />
+      <BlogCard blogs={posts} />
+      {totalPosts > 0 && (
+        <PaginationBar
+          currentPage={currentPage}
+          totalPages={totalPages}
+          baseUrl="/"
+        />
+      )}
     </main>
   );
 };
+
 export default Home;

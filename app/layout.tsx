@@ -28,7 +28,9 @@ export default function RootLayout({
   return (
     <SessionProvider>
       <html lang="en" suppressHydrationWarning>
-        <body className={`${inter.className} antialiased`}>
+        <body
+          className={`${inter.className} antialiased bg-background text-foreground`}
+        >
           {/** upload thing */}
           <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
           <ThemeProvider

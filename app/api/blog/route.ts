@@ -36,7 +36,10 @@ export async function GET(request: NextRequest) {
 
   // Process posts to extract first 50 words of description and remove HTML tags
   const processedPosts = posts.map((post) => {
-    const plainText = post.description.replace(/<[^>]*>/g, "");
+    // Replace closing tags followed by opening tags with a space in between
+    const textWithSpaces = post.description.replace(/<\/[^>]*><[^>]*>/g, " ");
+    // Then remove all remaining HTML tags
+    const plainText = textWithSpaces.replace(/<[^>]*>/g, "");
     const words = plainText.split(/\s+/);
     const truncatedDescription =
       words.slice(0, 50).join(" ") + (words.length > 50 ? "..." : "");

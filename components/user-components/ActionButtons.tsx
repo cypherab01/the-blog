@@ -1,7 +1,7 @@
 import { getIdServerAction } from "@/lib/auth/getIdServerAction";
 import SignIn from "./sign-in";
 import Link from "next/link";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 
 const ActionButtons = async () => {
   const userId = await getIdServerAction();

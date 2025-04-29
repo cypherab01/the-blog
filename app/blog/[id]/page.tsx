@@ -88,7 +88,7 @@ export default async function Page({
               className="w-full h-auto rounded-md aspect-video"
               width={1000}
               height={1000}
-              priority={false}
+              priority
             />
           </div>
         )}

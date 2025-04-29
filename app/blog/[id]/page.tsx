@@ -60,22 +60,35 @@ export default async function Page({
         <h1 className="py-4 mb-4 text-sm font-bold tracking-tight border-b bg-background border-border">
           {blog.title}
         </h1>
-        <p className="flex items-center w-full gap-2 mb-4 text-sm text-muted-foreground">
-          <Avatar className="z-0">
-            <AvatarImage src={image} />
-            <AvatarFallback>{name.charAt(0)}</AvatarFallback>
-          </Avatar>
-          {name}
-        </p>
+
+        <div className="flex gap-4 items-center justify-start w-full">
+          <p className="flex items-center gap-2 mb-4 text-sm text-muted-foreground">
+            <Avatar className="z-10">
+              <AvatarImage src={image} alt={name} />
+              <AvatarFallback>{name.charAt(0) || "AB"}</AvatarFallback>
+            </Avatar>
+            {name}
+          </p>
+
+          <p className="text-sm text-muted-foreground">
+            {blog.createdAt.toLocaleDateString("en-US", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </p>
+        </div>
 
         {blog.image && (
-          <div className="mb-6">
+          <div className="mb-8">
             <Image
               src={blog.image}
               alt={blog.title}
               className="w-full h-auto rounded-md aspect-video"
               width={1000}
               height={1000}
+              priority={false}
             />
           </div>
         )}

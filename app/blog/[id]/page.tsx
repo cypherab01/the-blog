@@ -6,6 +6,8 @@ import Image from "next/image";
 import "./styles.css";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getAuthorInfo } from "@/actions/getAuthorName";
+import parse from "html-react-parser";
+import { Badge } from "@/components/ui/badge";
 
 // This is for generating metadata dynamically based on params
 export async function generateMetadata({
@@ -54,10 +56,12 @@ export default async function Page({
     const { name, image } = await getAuthorInfo({ id: blog.author });
 
     return (
-      <div className="max-w-4xl mx-auto p-4 blog-container">
-        <h1 className="font-bold mb-4 tracking-tight">{blog.title}</h1>
-        <p className="text-sm text-muted-foreground w-full flex items-center gap-2">
-          <Avatar>
+      <div className="max-w-4xl p-4 mx-auto blog-container">
+        <h1 className="py-4 mb-4 text-sm font-bold tracking-tight border-b bg-background border-border">
+          {blog.title}
+        </h1>
+        <p className="flex items-center w-full gap-2 mb-4 text-sm text-muted-foreground">
+          <Avatar className="z-0">
             <AvatarImage src={image} />
             <AvatarFallback>{name.charAt(0)}</AvatarFallback>
           </Avatar>
@@ -76,28 +80,24 @@ export default async function Page({
           </div>
         )}
 
-        <div className="mb-4 flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 mb-4">
           {blog.tags.map((tag: string, index: number) => (
-            <span
-              key={index}
-              className="px-3 py-1 bg-muted rounded-full text-sm"
-            >
+            <Badge variant="secondary" key={index} className="text-sm">
               {tag}
-            </span>
+            </Badge>
           ))}
         </div>
 
-        <div
-          className="prose prose-lg max-w-none"
-          dangerouslySetInnerHTML={{ __html: blog.description }}
-        />
+        <div className="prose prose-lg max-w-none">
+          {parse(blog.description)}
+        </div>
       </div>
     );
   } catch (error) {
     console.error("Error fetching blog post:", error);
     return (
-      <div className="max-w-4xl mx-auto p-4">
-        <h1 className="text-3xl font-bold mb-4">Error</h1>
+      <div className="max-w-4xl p-4 mx-auto">
+        <h1 className="mb-4 text-3xl font-bold">Error</h1>
         <p>Failed to load blog post. Please try again later.</p>
       </div>
     );

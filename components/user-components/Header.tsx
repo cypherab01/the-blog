@@ -4,7 +4,7 @@ import ActionButtons from "@/components/user-components/ActionButtons";
 
 const Header = () => {
   return (
-    <header className="py-4 mb-4 border-b">
+    <header className="py-4 mb-4">
       <div className="flex items-center justify-between">
         <Link href="/">
           <h1 className="text-2xl font-bold tracking-tight">The Blog</h1>
